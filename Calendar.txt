@@ -1,0 +1,80 @@
+package Test.ExcelReader;
+
+import java.time.Duration;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+public class TestSelenium {
+
+	public static void main(String[] args) throws InterruptedException {
+	 
+		    
+		   	WebDriver driver = new ChromeDriver();
+			String month="July";  //only change this 
+			int year_to_select=1222;  //only change this 
+			int present_year =2023; //dont change it
+			String date_Select = "27";  //only change this
+			
+			 driver.manage().window().maximize();
+			driver.get("https://demo.automationtesting.in/Datepicker.html");
+			WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(10));
+			By change_year = By.cssSelector("select[title='Change the year']");
+	
+	 
+			driver.findElement(By.cssSelector(".form-control.is-datepick")).click();
+			wait.until(ExpectedConditions.visibilityOfElementLocated(change_year));
+	
+		String loc = "//option[text()='"+year_to_select+"']";
+			
+		
+	driver.findElement(change_year).click();
+	
+	while(driver.findElements(By.xpath(loc)).isEmpty())
+	{
+		if(year_to_select>present_year)
+		{
+			 
+			driver.findElement(By.xpath("(//select[@title='Change the year']/option)[last()]")).click();
+			 
+		}
+		else {
+			
+			driver.findElement(By.xpath("//select[@title='Change the year']/option[1]")).click();
+			 
+			
+		}
+		
+	}
+	 
+	
+	 Select select_year = new Select(driver.findElement(change_year));
+	select_year.selectByVisibleText(String.valueOf(year_to_select));
+	
+	 
+	Select select_month = new Select(driver.findElement(By.cssSelector("select[title='Change the month']")));
+	select_month.selectByVisibleText(month);
+	List<WebElement> dates = driver.findElements(By.xpath("//a[contains(@title,'Select')]"));
+	
+	for(int i=0;i<dates.size();++i)
+	{
+		String date_actual =dates.get(i).getText();
+		if(date_actual.equals(date_Select))
+		{
+			dates.get(i).click();
+			break;
+		}
+	}
+	
+		       
+	 
+
+
+
+}}
